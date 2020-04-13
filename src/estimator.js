@@ -13,25 +13,29 @@ const getNormalisedTimeToElapse = (periodType, timeToElapse) => {
 
 const getInfectionFactor = (timeToElapse) => Math.floor(timeToElapse / 3);
 
-const getiInfectionsByRequestedTime = (data) => this.currentlyInfected
+const getiInfectionsByRequestedTime = (data, currentlyInfected) => currentlyInfected
         * (2 ** getInfectionFactor(getNormalisedTimeToElapse(data.periodType, data.timeToElapse)));
 
-const getSevereCasesByRequestedTime = () => Math.floor(this.infectionsByRequestedTime * 0.15);
+const getSevereCasesByRequestedTime = (infectionsByRequestedTime) => Math.floor(
+  infectionsByRequestedTime * 0.15
+);
 
-const getHospitalBedsByRequestedTime = (data) => {
-  const tempHospitalBeds = (data.totalHospitalBeds * 0.35) - this.severeCasesByRequestedTime;
+const getHospitalBedsByRequestedTime = (data, severeCasesByRequestedTime) => {
+  const tempHospitalBeds = (data.totalHospitalBeds * 0.35) - severeCasesByRequestedTime;
   return (tempHospitalBeds >= 0 || -1) * Math.floor(Math.abs(tempHospitalBeds));
 };
 
-const getCasesForICUByRequestedTime = () => Math.floor(this.infectionsByRequestedTime * 0.05);
-
-const getCasesForVentilatorsByRequestedTime = () => Math.floor(
-  this.infectionsByRequestedTime * 0.02
+const getCasesForICUByRequestedTime = (infectionsByRequestedTime) => Math.floor(
+  infectionsByRequestedTime * 0.05
 );
 
-const getDollarsInFlight = (data) => {
+const getCasesForVentilatorsByRequestedTime = (infectionsByRequestedTime) => Math.floor(
+  infectionsByRequestedTime * 0.02
+);
+
+const getDollarsInFlight = (data, infectionsByRequestedTime) => {
   Math.floor(
-    (this.infectionsByRequestedTime
+    (infectionsByRequestedTime
             * data.avgDailyIncomePopulation
             * data.avgDailyIncomeInUSD) / 30
   );
@@ -44,55 +48,73 @@ const covid19ImpactEstimator = (data) => {
   impact.currentlyInfected = data.reportedCases * 10;
   //   impact.infectionsByRequestedTime = impact.currentlyInfected
   //                                         * (2 ** getInfectionFactor(normalisedTimeToElapse));
-  impact.infectionsByRequestedTime = getiInfectionsByRequestedTime(data);
+  impact.infectionsByRequestedTime = getiInfectionsByRequestedTime(data, impact.currentlyInfected);
   //   impact.severeCasesByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.15);
-  impact.severeCasesByRequestedTime = getSevereCasesByRequestedTime();
+  impact.severeCasesByRequestedTime = getSevereCasesByRequestedTime(
+    impact.infectionsByRequestedTime
+  );
   //   impact.tempHospitalBeds = (data.totalHospitalBeds * 0.35)
   //                                             - impact.severeCasesByRequestedTime;
   //   impact.hospitalBedsByRequestedTime = (impact.tempHospitalBeds >= 0 || -1)
   //                                     * Math.floor(Math.abs(impact.tempHospitalBeds));
-  impact.hospitalBedsByRequestedTime = getHospitalBedsByRequestedTime(data);
+  impact.hospitalBedsByRequestedTime = getHospitalBedsByRequestedTime(
+    data, impact.severeCasesByRequestedTime
+  );
   //   impact.casesForICUByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.05);
-  impact.casesForICUByRequestedTime = getCasesForICUByRequestedTime();
+  impact.casesForICUByRequestedTime = getCasesForICUByRequestedTime(
+    impact.infectionsByRequestedTime
+  );
   // impact.casesForVentilatorsByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.02)
-  impact.casesForVentilatorsByRequestedTime = getCasesForVentilatorsByRequestedTime();
+  impact.casesForVentilatorsByRequestedTime = getCasesForVentilatorsByRequestedTime(
+    impact.infectionsByRequestedTime
+  );
   //   impact.dollarsInFlight = Math.floor(
   //     (impact.infectionsByRequestedTime
   //         * data.avgDailyIncomePopulation
   //         * data.avgDailyIncomeInUSD) / 30
   //   );
-  impact.dollarsInFlight = getDollarsInFlight(data);
+  impact.dollarsInFlight = getDollarsInFlight(data, impact.infectionsByRequestedTime);
 
   const severeImpact = {};
   severeImpact.currentlyInfected = data.reportedCases * 50;
   //   severeImpact.infectionsByRequestedTime = severeImpact.currentlyInfected
   // eslint-disable-next-line max-len
   //                                                 * (2 ** getInfectionFactor(normalisedTimeToElapse));
-  severeImpact.infectionsByRequestedTime = getiInfectionsByRequestedTime(data);
+  severeImpact.infectionsByRequestedTime = getiInfectionsByRequestedTime(
+    data, severeImpact.currentlyInfected
+  );
   //   severeImpact.severeCasesByRequestedTime = Math.floor(
   //     severeImpact.infectionsByRequestedTime * 0.15
   //   );
-  severeImpact.severeCasesByRequestedTime = getSevereCasesByRequestedTime();
+  severeImpact.severeCasesByRequestedTime = getSevereCasesByRequestedTime(
+    severeImpact.infectionsByRequestedTime
+  );
   //   severeImpact.tempHospitalBeds = (data.totalHospitalBeds * 0.35)
   //                                     - severeImpact.severeCasesByRequestedTime;
   //   severeImpact.hospitalBedsByRequestedTime = (severeImpact.tempHospitalBeds >= 0 || -1)
   //                                          * Math.floor(Math.abs(severeImpact.tempHospitalBeds));
-  severeImpact.hospitalBedsByRequestedTime = getHospitalBedsByRequestedTime(data);
+  severeImpact.hospitalBedsByRequestedTime = getHospitalBedsByRequestedTime(
+    data, severeImpact.severeCasesByRequestedTime
+  );
 
   //   severeImpact.casesForICUByRequestedTime = Math.floor(
   //     severeImpact.infectionsByRequestedTime * 0.05
   //   );
-  severeImpact.casesForICUByRequestedTime = getCasesForICUByRequestedTime();
+  severeImpact.casesForICUByRequestedTime = getCasesForICUByRequestedTime(
+    severeImpact.infectionsByRequestedTime
+  );
   //   severeImpact.casesForVentilatorsByRequestedTime = Math.floor(
   //     severeImpact.infectionsByRequestedTime * 0.02
   //   );
-  severeImpact.casesForVentilatorsByRequestedTime = getCasesForVentilatorsByRequestedTime();
+  severeImpact.casesForVentilatorsByRequestedTime = getCasesForVentilatorsByRequestedTime(
+    severeImpact.infectionsByRequestedTime
+  );
   //   severeImpact.dollarsInFlight = Math.floor(
   //     (severeImpact.infectionsByRequestedTime
   //         * data.avgDailyIncomePopulation
   //         * data.avgDailyIncomeInUSD) / 30
   //   );
-  severeImpact.dollarsInFlight = getDollarsInFlight(data);
+  severeImpact.dollarsInFlight = getDollarsInFlight(data, severeImpact.infectionsByRequestedTime);
 
 
   const output = {

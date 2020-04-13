@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable object-shorthand */
 const normaliseTimeToElapse = (periodType, timeToElapse) => {
   let normalisedTimeToElapse;
   if (periodType === 'weeks') {
@@ -21,17 +20,24 @@ const covid19ImpactEstimator = (data) => {
   impact.currentlyInfected = data.reportedCases * 10;
   impact.infectionsByRequestedTime = impact.currentlyInfected
                                         * (2 ** getInfectionFactor(normalisedTimeToElapse));
+  impact.severeCasesByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.15);
+  impact.hospitalBedsByRequestedTime = impact.severeCasesByRequestedTime
+                                                - Math.floor(data.totalHospitalBeds * 0.35);
 
   const severeImpact = {};
   severeImpact.currentlyInfected = data.reportedCases * 50;
   severeImpact.infectionsByRequestedTime = severeImpact.currentlyInfected
                                                 * (2 ** getInfectionFactor(normalisedTimeToElapse));
-
+  severeImpact.severeCasesByRequestedTime = Math.floor(
+    severeImpact.infectionsByRequestedTime * 0.15
+  );
+  severeImpact.hospitalBedsByRequestedTime = severeImpact.severeCasesByRequestedTime
+  - Math.floor(data.totalHospitalBeds * 0.35);
 
   const output = {
-    data: data, // the input data you got
-    impact: impact, // your best case estimation
-    severeImpact: severeImpact // severe case estimation
+    data, // the input data you got
+    impact, // your best case estimation
+    severeImpact // severe case estimation
   };
 
   return output;

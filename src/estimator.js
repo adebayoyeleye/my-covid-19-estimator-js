@@ -35,8 +35,8 @@ const getCasesForVentilatorsByRequestedTime = (infectionsByRequestedTime) => Mat
 
 const getDollarsInFlight = (data, infectionsByRequestedTime) => Math.floor(
   (infectionsByRequestedTime
-            * data.avgDailyIncomePopulation
-            * data.avgDailyIncomeInUSD) / 30
+    * data.region.avgDailyIncomePopulation
+    * data.region.avgDailyIncomeInUSD) / 30
 );
 
 const covid19ImpactEstimator = (data) => {
@@ -103,22 +103,35 @@ const covid19ImpactEstimator = (data) => {
 export default covid19ImpactEstimator;
 
 
-/* {
-    region: {
-    name: "Africa",
+/* const input = {
+  region: {
+    name: 'Africa',
     avgAge: 19.7,
     avgDailyIncomeInUSD: 5,
     avgDailyIncomePopulation: 0.71
-    },
-    periodType: "days",
-    timeToElapse: 58,
-    reportedCases: 674,
-    population: 66622705,
-    totalHospitalBeds: 35353
-}
+  },
+  periodType: 'days',
+  timeToElapse: 58,
+  reportedCases: 674,
+  population: 66622705,
+  totalHospitalBeds: 35353
+}; */
 
-{
+// const output = covid19ImpactEstimator(input);
+// console.log('severeImpact.infectionsByRequestedTime: ',
+//                  output.severeImpact.infectionsByRequestedTime);
+// console.log('data.region.avgDailyIncomeInUSD: ', output.data.region.avgDailyIncomeInUSD);
+// console.log('data.region.avgDailyIncomePopulation): ',
+//                  output.data.region.avgDailyIncomePopulation);
+// console.log('severeImpact.dollarsInFlight: ', output.severeImpact.dollarsInFlight);
+// console.log('severeImpact.infectionsByRequestedTime: ',
+//                  output.severeImpact.infectionsByRequestedTime);
+// // console.log('impact.casesForVentilatorsByRequestedTime: ',
+//                  output.impact.casesForVentilatorsByRequestedTime);
+// console.log('impact.dollarsInFlight: ', output.impact.dollarsInFlight);
+
+/* {
     data: {}, // the input data you got
     impact: {}, // your best case estimation
     severeImpact: {}
-} */
+}  */

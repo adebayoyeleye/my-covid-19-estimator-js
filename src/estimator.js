@@ -36,7 +36,8 @@ const getCasesForVentilatorsByRequestedTime = (infectionsByRequestedTime) => Mat
 const getDollarsInFlight = (data, infectionsByRequestedTime) => Math.floor(
   (infectionsByRequestedTime
     * data.region.avgDailyIncomePopulation
-    * data.region.avgDailyIncomeInUSD) / 30
+    * data.region.avgDailyIncomeInUSD)
+    / getNormalisedTimeToElapse(data.periodType, data.timeToElapse)
 );
 
 const covid19ImpactEstimator = (data) => {

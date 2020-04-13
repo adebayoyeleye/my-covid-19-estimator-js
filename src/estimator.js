@@ -2,7 +2,7 @@
 /* eslint-disable object-shorthand */
 const normaliseTimeToElapse = (periodType, timeToElapse) => {
   let normalisedTimeToElapse;
-  if (periodType === 'week') {
+  if (periodType === 'weeks') {
     normalisedTimeToElapse = timeToElapse * 7;
   } else if (periodType === 'months') {
     normalisedTimeToElapse = timeToElapse * 30;

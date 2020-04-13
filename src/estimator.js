@@ -1,5 +1,5 @@
-/* eslint-disable object-shorthand */
 /* eslint-disable linebreak-style */
+/* eslint-disable object-shorthand */
 const normaliseTimeToElapse = (periodType, timeToElapse) => {
   let normalisedTimeToElapse;
   if (periodType === 'week') {
@@ -18,13 +18,13 @@ const covid19ImpactEstimator = (data) => {
   const normalisedTimeToElapse = normaliseTimeToElapse(data.periodType, data.timeToElapse);
 
   const impact = {};
-  impact.currenlyInfected = data.reportedCases * 10;
-  impact.infectionsByRequestedTime = impact.currenlyInfected
+  impact.currentlyInfected = data.reportedCases * 10;
+  impact.infectionsByRequestedTime = impact.currentlyInfected
                                         * (2 ** getInfectionFactor(normalisedTimeToElapse));
 
   const severeImpact = {};
-  severeImpact.currenlyInfected = data.reportedCases * 50;
-  severeImpact.infectionsByRequestedTime = severeImpact.currenlyInfected
+  severeImpact.currentlyInfected = data.reportedCases * 50;
+  severeImpact.infectionsByRequestedTime = severeImpact.currentlyInfected
                                                 * (2 ** getInfectionFactor(normalisedTimeToElapse));
 
 

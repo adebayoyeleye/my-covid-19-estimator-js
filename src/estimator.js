@@ -21,8 +21,15 @@ const covid19ImpactEstimator = (data) => {
   impact.infectionsByRequestedTime = impact.currentlyInfected
                                         * (2 ** getInfectionFactor(normalisedTimeToElapse));
   impact.severeCasesByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.15);
-  impact.hospitalBedsByRequestedTime = impact.severeCasesByRequestedTime
-                                                - Math.floor(data.totalHospitalBeds * 0.35);
+  impact.hospitalBedsByRequestedTime = Math.floor(data.totalHospitalBeds * 0.35)
+                                                - impact.severeCasesByRequestedTime;
+  impact.casesForICUByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.05);
+  impact.casesForVentilatorsByRequestedTime = Math.floor(impact.infectionsByRequestedTime * 0.02);
+  impact.dollarsInFlight = Math.floor(
+    (impact.infectionsByRequestedTime
+        * data.avgDailyIncomePopulation
+        * data.avgDailyIncomeInUSD) / 30
+  );
 
   const severeImpact = {};
   severeImpact.currentlyInfected = data.reportedCases * 50;
@@ -31,8 +38,19 @@ const covid19ImpactEstimator = (data) => {
   severeImpact.severeCasesByRequestedTime = Math.floor(
     severeImpact.infectionsByRequestedTime * 0.15
   );
-  severeImpact.hospitalBedsByRequestedTime = severeImpact.severeCasesByRequestedTime
-  - Math.floor(data.totalHospitalBeds * 0.35);
+  severeImpact.hospitalBedsByRequestedTime = Math.floor(data.totalHospitalBeds * 0.35)
+                                                - severeImpact.severeCasesByRequestedTime;
+  severeImpact.casesForICUByRequestedTime = Math.floor(
+    severeImpact.infectionsByRequestedTime * 0.05
+  );
+  severeImpact.casesForVentilatorsByRequestedTime = Math.floor(
+    severeImpact.infectionsByRequestedTime * 0.02
+  );
+  severeImpact.dollarsInFlight = Math.floor(
+    (severeImpact.infectionsByRequestedTime
+        * data.avgDailyIncomePopulation
+        * data.avgDailyIncomeInUSD) / 30
+  );
 
   const output = {
     data, // the input data you got

@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 /* eslint-disable linebreak-style */
 const normaliseTimeToElapse = (periodType, timeToElapse) => {
   let normalisedTimeToElapse;

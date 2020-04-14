@@ -1,14 +1,8 @@
 /* eslint-disable linebreak-style */
 const getNormalisedTimeToElapse = (periodType, timeToElapse) => {
-  let normalisedTimeToElapse;
-  if (periodType === 'weeks') {
-    normalisedTimeToElapse = timeToElapse * 7;
-  } else if (periodType === 'months') {
-    normalisedTimeToElapse = timeToElapse * 30;
-  } else {
-    normalisedTimeToElapse = timeToElapse;
-  }
-  return normalisedTimeToElapse;
+  if (periodType === 'weeks') return timeToElapse * 7;
+  if (periodType === 'months') return timeToElapse * 30;
+  return timeToElapse;
 };
 
 const getInfectionFactor = (timeToElapse) => Math.floor(timeToElapse / 3);
